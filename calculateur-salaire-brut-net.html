@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Salaire Brut ⇄ Net | France 2024</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #1f2a42;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --accent-gradient-soft: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2d3a52;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 60px rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139, 92, 246, 0.1), transparent);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--accent-gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            box-shadow: var(--shadow-glow);
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 16px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .mode-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .mode-btn:not(.active):hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-gradient-soft);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .label-with-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--bg-card-hover);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            cursor: help;
+            position: relative;
+        }
+
+        .info-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            white-space: nowrap;
+            max-width: 280px;
+            white-space: normal;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        input[type="number"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input.has-suffix {
+            padding-right: 4rem;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.25rem;
+            padding-right: 3rem;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toggle-label span {
+            font-weight: 500;
+        }
+
+        .toggle-label small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-color);
+            transition: 0.3s;
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--accent-gradient);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Results Card */
+        .results-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.05) 100%);
+        }
+
+        .result-main {
+            text-align: center;
+            padding: 2rem;
+            background: var(--accent-gradient-soft);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-period {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-item {
+            background: var(--bg-secondary);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-item-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-item-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-item-sub {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* Breakdown Section */
+        .breakdown-section {
+            margin-top: 1.5rem;
+        }
+
+        .breakdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .breakdown-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .breakdown-header h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .breakdown-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .breakdown-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .breakdown-content {
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .breakdown-content.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .breakdown-table td {
+            font-size: 0.95rem;
+        }
+
+        .breakdown-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .breakdown-table .total-row {
+            background: var(--accent-gradient-soft);
+            font-weight: 700;
+        }
+
+        .breakdown-table .total-row td {
+            border-bottom: none;
+        }
+
+        .rate-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-card-hover);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Comparison Section */
+        .comparison-card {
+            grid-column: 1 / -1;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .comparison-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .comparison-period {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-brut {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .comparison-net {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+
+        /* History Panel */
+        .history-card {
+            grid-column: 1 / -1;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient-soft);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .history-details h5 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .history-details span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .history-values {
+            text-align: right;
+        }
+
+        .history-brut {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .history-net {
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .history-delete {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: 1rem;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover .history-delete {
+            opacity: 1;
+        }
+
+        .history-delete:hover {
+            color: var(--error);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-history svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Tips Card */
+        .tips-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tip-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .tip-content h5 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .tip-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            transform: translateY(150%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Print Styles */
+        @media print {
+            .bg-pattern, .actions, .mode-toggle, .history-card, footer {
+                display: none;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">💰</div>
+            </div>
+            <h1>Calculateur Salaire</h1>
+            <p class="subtitle">Convertissez instantanément votre salaire brut en net (et vice versa) avec précision. Taux 2024 actualisés.</p>
+        </header>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="brut-to-net" onclick="setMode('brut-to-net')">
+                <span>📊</span> Brut → Net
+            </button>
+            <button class="mode-btn" data-mode="net-to-brut" onclick="setMode('net-to-brut')">
+                <span>🔄</span> Net → Brut
+            </button>
+        </div>
+
+        <div class="main-grid">
+            <!-- Input Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚙️</div>
+                    <div>
+                        <h3 class="card-title">Paramètres</h3>
+                        <p class="card-subtitle">Configurez votre situation</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label-with-info">
+                        <span id="salary-label">Salaire brut</span>
+                        <span class="info-icon" data-tooltip="Montant avant déduction des cotisations sociales">?</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="number" id="salary-input" class="has-suffix" placeholder="3000" oninput="calculate()">
+                        <span class="input-suffix">€</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Période</label>
+                        <select id="period" onchange="calculate()">
+                            <option value="monthly">Mensuel</option>
+                            <option value="yearly">Annuel</option>
+                            <option value="daily">Journalier</option>
+                            <option value="hourly">Horaire</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-with-info">
+                            Statut
+                            <span class="info-icon" data-tooltip="Le statut affecte le taux de cotisations sociales">?</span>
+                        </label>
+                        <select id="status" onchange="updateStatusOptions(); calculate()">
+                            <option value="non-cadre">Non-cadre</option>
+                            <option value="cadre">Cadre</option>
+                            <option value="fonction-publique">Fonction publique</option>
+                            <option value="profession-liberale">Profession libérale</option>
+                            <option value="apprenti">Apprenti</option>
+                            <option value="stagiaire">Stagiaire</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="label-with-info">
+                            Heures/semaine
+                            <span class="info-icon" data-tooltip="Temps de travail hebdomadaire (35h = temps plein)">?</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" id="hours-week" class="has-suffix" value="35" min="1" max="48" oninput="calculate()">
+                            <span class="input-suffix">h</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Région</label>
+                        <select id="region" onchange="calculate()">
+                            <option value="metropole">France métropolitaine</option>
+                            <option value="alsace-moselle">Alsace-Moselle</option>
+                            <option value="dom">DOM-TOM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label-with-info">
+                        Taux de prélèvement à la source
+                        <span class="info-icon" data-tooltip="Votre taux d'imposition personnalisé (0% = taux neutre)">?</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="number" id="tax-rate" class="has-suffix" value="0" min="0" max="45" step="0.1" oninput="calculate()">
+                        <span class="input-suffix">%</span>
+                    </div>
+                </div>
+
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <span>🏠</span>
+                        <div>
+                            <span>Mutuelle d'entreprise</span>
+                            <br><small>Part salariale ~25€/mois</small>
+                        </div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="mutuelle" checked onchange="calculate()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <span>🚇</span>
+                        <div>
+                            <span>Remboursement transport</span>
+                            <br><small>50% du Pass Navigo (~43€)</small>
+                        </div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="transport" onchange="calculate()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <span>🍽️</span>
+                        <div>
+                            <span>Tickets restaurant</span>
+                            <br><small>Part salariale ~4€/jour</small>
+                        </div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="tickets-resto" onchange="calculate()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group" id="heures-sup-group">
+                    <div class="toggle-label">
+                        <span>⏰</span>
+                        <div>
+                            <span>Heures supplémentaires défiscalisées</span>
+                            <br><small>Exonération jusqu'à 7500€/an</small>
+                        </div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="heures-sup" onchange="calculate()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group" id="heures-sup-amount" style="display: none;">
+                    <label>Montant heures sup. mensuelles</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="heures-sup-value" class="has-suffix" value="0" min="0" oninput="calculate()">
+                        <span class="input-suffix">€</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card results-card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <div>
+                        <h3 class="card-title">Résultats</h3>
+                        <p class="card-subtitle">Votre salaire calculé</p>
+                    </div>
+                </div>
+
+                <div class="result-main">
+                    <div class="result-label" id="result-main-label">Salaire Net</div>
+                    <div class="result-value" id="result-main-value">0 €</div>
+                    <div class="result-period" id="result-main-period">par mois</div>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">Salaire brut</div>
+                        <div class="result-item-value" id="result-brut">0 €</div>
+                        <div class="result-item-sub" id="result-brut-yearly">0 € / an</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Salaire net avant impôt</div>
+                        <div class="result-item-value" id="result-net-avant">0 €</div>
+                        <div class="result-item-sub" id="result-net-avant-yearly">0 € / an</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Prélèvement à la source</div>
+                        <div class="result-item-value" id="result-impot">0 €</div>
+                        <div class="result-item-sub" id="result-taux-impot">Taux: 0%</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Salaire net après impôt</div>
+                        <div class="result-item-value" id="result-net-apres">0 €</div>
+                        <div class="result-item-sub" id="result-net-apres-yearly">0 € / an</div>
+                    </div>
+                </div>
+
+                <!-- Coût employeur -->
+                <div class="result-item" style="margin-bottom: 1rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); border-color: rgba(245, 158, 11, 0.3);">
+                    <div class="result-item-label">💼 Coût total employeur</div>
+                    <div class="result-item-value" id="result-cout-employeur">0 €</div>
+                    <div class="result-item-sub" id="result-charges-patronales">Charges patronales: 0 €</div>
+                </div>
+
+                <!-- Taux et ratios -->
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">Taux de charges salariales</div>
+                        <div class="result-item-value" id="result-taux-charges">0 %</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Net/Brut ratio</div>
+                        <div class="result-item-value" id="result-ratio">0 %</div>
+                    </div>
+                </div>
+
+                <!-- Breakdown -->
+                <div class="breakdown-section">
+                    <div class="breakdown-header" onclick="toggleBreakdown('cotisations')">
+                        <h4>📋 Détail des cotisations</h4>
+                        <span class="breakdown-toggle" id="toggle-cotisations">▼</span>
+                    </div>
+                    <div class="breakdown-content" id="breakdown-cotisations">
+                        <table class="breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>Cotisation</th>
+                                    <th>Taux</th>
+                                    <th>Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cotisations-body">
+                                <!-- Dynamically filled -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="saveCalculation()">
+                        <span>💾</span> Sauvegarder
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportPDF()">
+                        <span>📄</span> Exporter PDF
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyResult()">
+                        <span>📋</span> Copier
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetForm()">
+                        <span>🔄</span> Réinitialiser
+                    </button>
+                </div>
+            </div>
+
+            <!-- Comparison Card -->
+            <div class="card comparison-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div>
+                        <h3 class="card-title">Vue d'ensemble</h3>
+                        <p class="card-subtitle">Votre salaire sur différentes périodes</p>
+                    </div>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-period">Horaire</div>
+                        <div class="comparison-brut" id="comp-hourly-brut">0 € brut</div>
+                        <div class="comparison-net" id="comp-hourly-net">0 € net</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-period">Journalier</div>
+                        <div class="comparison-brut" id="comp-daily-brut">0 € brut</div>
+                        <div class="comparison-net" id="comp-daily-net">0 € net</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-period">Mensuel</div>
+                        <div class="comparison-brut" id="comp-monthly-brut">0 € brut</div>
+                        <div class="comparison-net" id="comp-monthly-net">0 € net</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-period">Annuel</div>
+                        <div class="comparison-brut" id="comp-yearly-brut">0 € brut</div>
+                        <div class="comparison-net" id="comp-yearly-net">0 € net</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Card -->
+            <div class="card history-card">
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <h3 class="card-title">Historique</h3>
+                        <p class="card-subtitle">Vos derniers calculs sauvegardés</p>
+                    </div>
+                </div>
+                <div class="history-list" id="history-list">
+                    <div class="empty-history">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p>Aucun calcul sauvegardé</p>
+                        <small>Cliquez sur "Sauvegarder" pour garder un historique</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card tips-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(16, 185, 129, 0.2);">💡</div>
+                    <div>
+                        <h3 class="card-title">Conseils & Astuces</h3>
+                        <p class="card-subtitle">Optimisez votre rémunération</p>
+                    </div>
+                </div>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <div class="tip-icon">🎯</div>
+                        <div class="tip-content">
+                            <h5>Négociation salariale</h5>
+                            <p>Négociez toujours en brut annuel pour avoir une vision claire. Un différentiel de 100€ brut mensuel = ~950€ net/an.</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">📈</div>
+                        <div class="tip-content">
+                            <h5>Avantages en nature</h5>
+                            <p>Tickets restaurant, mutuelle, transport : ces avantages sont souvent plus avantageux fiscalement qu'une augmentation.</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">⏰</div>
+                        <div class="tip-content">
+                            <h5>Heures supplémentaires</h5>
+                            <p>Les heures sup. sont exonérées d'impôt jusqu'à 7500€/an. Un levier puissant pour augmenter votre net.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Calculateur Salaire Brut/Net France 2024 — Les calculs sont indicatifs et basés sur les taux en vigueur.</p>
+            <p>Pour un calcul officiel, consultez votre service RH ou <a href="https://www.urssaf.fr" target="_blank">urssaf.fr</a></p>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toast-message">Action effectuée</span>
+    </div>
+
+    <script>
+        // Configuration des taux de cotisations 2024
+        const COTISATIONS = {
+            'non-cadre': {
+                salariales: [
+                    { nom: 'Assurance maladie', taux: 0, base: 'total' },
+                    { nom: 'Assurance vieillesse plafonnée', taux: 6.90, base: 'plafond' },
+                    { nom: 'Assurance vieillesse déplafonnée', taux: 0.40, base: 'total' },
+                    { nom: 'Contribution solidarité autonomie', taux: 0, base: 'total' },
+                    { nom: 'Allocations familiales', taux: 0, base: 'total' },
+                    { nom: 'Accidents du travail', taux: 0, base: 'total' },
+                    { nom: 'FNAL', taux: 0, base: 'total' },
+                    { nom: 'Assurance chômage', taux: 0, base: 'plafond4' },
+                    { nom: 'AGS', taux: 0, base: 'plafond4' },
+                    { nom: 'Retraite complémentaire T1', taux: 3.15, base: 'plafond' },
+                    { nom: 'Retraite complémentaire T2', taux: 8.64, base: 'tranche2' },
+                    { nom: 'CEG Tranche 1', taux: 0.86, base: 'plafond' },
+                    { nom: 'CEG Tranche 2', taux: 1.08, base: 'tranche2' },
+                    { nom: 'CSG déductible', taux: 6.80, base: 'csg' },
+                    { nom: 'CSG non déductible', taux: 2.40, base: 'csg' },
+                    { nom: 'CRDS', taux: 0.50, base: 'csg' },
+                ],
+                patronales: [
+                    { nom: 'Assurance maladie', taux: 7.00, base: 'total' },
+                    { nom: 'Assurance vieillesse plafonnée', taux: 8.55, base: 'plafond' },
+                    { nom: 'Assurance vieillesse déplafonnée', taux: 2.02, base: 'total' },
+                    { nom: 'Contribution solidarité autonomie', taux: 0.30, base: 'total' },
+                    { nom: 'Allocations familiales', taux: 5.25, base: 'total' },
+                    { nom: 'Accidents du travail', taux: 2.00, base: 'total' },
+                    { nom: 'FNAL', taux: 0.50, base: 'total' },
+                    { nom: 'Assurance chômage', taux: 4.05, base: 'plafond4' },
+                    { nom: 'AGS', taux: 0.15, base: 'plafond4' },
+                    { nom: 'Retraite complémentaire T1', taux: 4.72, base: 'plafond' },
+                    { nom: 'Retraite complémentaire T2', taux: 12.95, base: 'tranche2' },
+                    { nom: 'CEG Tranche 1', taux: 1.29, base: 'plafond' },
+                    { nom: 'CEG Tranche 2', taux: 1.62, base: 'tranche2' },
+                ]
+            },
+            'cadre': {
+                salariales: [
+                    { nom: 'Assurance maladie', taux: 0, base: 'total' },
+                    { nom: 'Assurance vieillesse plafonnée', taux: 6.90, base: 'plafond' },
+                    { nom: 'Assurance vieillesse déplafonnée', taux: 0.40, base: 'total' },
+                    { nom: 'Assurance chômage', taux: 0, base: 'plafond4' },
+                    { nom: 'Retraite complémentaire T1', taux: 3.15, base: 'plafond' },
+                    { nom: 'Retraite complémentaire T2', taux: 8.64, base: 'tranche2' },
+                    { nom: 'CEG Tranche 1', taux: 0.86, base: 'plafond' },
+                    { nom: 'CEG Tranche 2', taux: 1.08, base: 'tranche2' },
+                    { nom: 'CET', taux: 0.14, base: 'plafond8' },
+                    { nom: 'APEC', taux: 0.024, base: 'plafond4' },
+                    { nom: 'CSG déductible', taux: 6.80, base: 'csg' },
+                    { nom: 'CSG non déductible', taux: 2.40, base: 'csg' },
+                    { nom: 'CRDS', taux: 0.50, base: 'csg' },
+                ],
+                patronales: [
+                    { nom: 'Assurance maladie', taux: 7.00, base: 'total' },
+                    { nom: 'Assurance vieillesse plafonnée', taux: 8.55, base: 'plafond' },
+                    { nom: 'Assurance vieillesse déplafonnée', taux: 2.02, base: 'total' },
+                    { nom: 'Contribution solidarité autonomie', taux: 0.30, base: 'total' },
+                    { nom: 'Allocations familiales', taux: 5.25, base: 'total' },
+                    { nom: 'Accidents du travail', taux: 2.00, base: 'total' },
+                    { nom: 'FNAL', taux: 0.50, base: 'total' },
+                    { nom: 'Assurance chômage', taux: 4.05, base: 'plafond4' },
+                    { nom: 'AGS', taux: 0.15, base: 'plafond4' },
+                    { nom: 'Retraite complémentaire T1', taux: 4.72, base: 'plafond' },
+                    { nom: 'Retraite complémentaire T2', taux: 12.95, base: 'tranche2' },
+                    { nom: 'CEG Tranche 1', taux: 1.29, base: 'plafond' },
+                    { nom: 'CEG Tranche 2', taux: 1.62, base: 'tranche2' },
+                    { nom: 'CET', taux: 0.21, base: 'plafond8' },
+                    { nom: 'APEC', taux: 0.036, base: 'plafond4' },
+                ]
+            },
+            'fonction-publique': {
+                salariales: [
+                    { nom: 'Pension civile', taux: 11.10, base: 'total' },
+                    { nom: 'CSG déductible', taux: 6.80, base: 'csg' },
+                    { nom: 'CSG non déductible', taux: 2.40, base: 'csg' },
+                    { nom: 'CRDS', taux: 0.50, base: 'csg' },
+                    { nom: 'RAFP', taux: 5.00, base: 'primes' },
+                ],
+                patronales: [
+                    { nom: 'Pension civile', taux: 74.28, base: 'total' },
+                    { nom: 'Allocations familiales', taux: 5.25, base: 'total' },
+                    { nom: 'FNAL', taux: 0.50, base: 'total' },
+                    { nom: 'RAFP', taux: 5.00, base: 'primes' },
+                ]
+            },
+            'profession-liberale': {
+                salariales: [
+                    { nom: 'URSSAF (maladie)', taux: 6.50, base: 'total' },
+                    { nom: 'Retraite de base', taux: 8.23, base: 'plafond' },
+                    { nom: 'Retraite complémentaire', taux: 7.00, base: 'total' },
+                    { nom: 'Invalidité-décès', taux: 1.30, base: 'total' },
+                    { nom: 'CSG déductible', taux: 6.80, base: 'csg' },
+                    { nom: 'CSG non déductible', taux: 2.40, base: 'csg' },
+                    { nom: 'CRDS', taux: 0.50, base: 'csg' },
+                ],
+                patronales: []
+            },
+            'apprenti': {
+                salariales: [
+                    { nom: 'CSG déductible (exonérée)', taux: 0, base: 'csg' },
+                    { nom: 'CRDS (exonérée)', taux: 0, base: 'csg' },
+                ],
+                patronales: [
+                    { nom: 'Assurance maladie', taux: 7.00, base: 'total' },
+                    { nom: 'Assurance vieillesse', taux: 8.55, base: 'plafond' },
+                    { nom: 'Allocations familiales', taux: 5.25, base: 'total' },
+                    { nom: 'Accidents du travail', taux: 2.00, base: 'total' },
+                ]
+            },
+            'stagiaire': {
+                salariales: [],
+                patronales: []
+            }
+        };
+
+        // Constantes 2024
+        const PLAFOND_SS_MENSUEL = 3864; // 2024
+        const PLAFOND_SS_ANNUEL = 46368;
+        const SMIC_MENSUEL = 1766.92; // 2024
+        const JOURS_TRAVAILLES_AN = 218;
+        const SEMAINES_AN = 52;
+
+        // État
+        let currentMode = 'brut-to-net';
+        let history = JSON.parse(localStorage.getItem('salary-history') || '[]');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHistory();
+            calculate();
+        });
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            const label = document.getElementById('salary-label');
+            if (mode === 'brut-to-net') {
+                label.textContent = 'Salaire brut';
+            } else {
+                label.textContent = 'Salaire net souhaité';
+            }
+            
+            calculate();
+        }
+
+        function updateStatusOptions() {
+            const status = document.getElementById('status').value;
+            const heuresSupGroup = document.getElementById('heures-sup-group');
+            
+            if (status === 'stagiaire' || status === 'apprenti') {
+                heuresSupGroup.style.display = 'none';
+            } else {
+                heuresSupGroup.style.display = 'flex';
+            }
+        }
+
+        function getPlafondBase(base, brutMensuel, plafondMensuel) {
+            switch(base) {
+                case 'total':
+                    return brutMensuel;
+                case 'plafond':
+                    return Math.min(brutMensuel, plafondMensuel);
+                case 'plafond4':
+                    return Math.min(brutMensuel, plafondMensuel * 4);
+                case 'plafond8':
+                    return Math.min(brutMensuel, plafondMensuel * 8);
+                case 'tranche2':
+                    return Math.max(0, Math.min(brutMensuel, plafondMensuel * 8) - plafondMensuel);
+                case 'csg':
+                    return brutMensuel * 0.9825; // Base CSG = 98.25% du brut
+                case 'primes':
+                    return brutMensuel * 0.2; // Estimation primes fonction publique
+                default:
+                    return brutMensuel;
+            }
+        }
+
+        function calculateCotisations(brutMensuel, status, region) {
+            const cotisationsConfig = COTISATIONS[status];
+            let plafondMensuel = PLAFOND_SS_MENSUEL;
+            
+            // Ajustement Alsace-Moselle
+            let tauxSupplementaire = 0;
+            if (region === 'alsace-moselle') {
+                tauxSupplementaire = 1.30; // Cotisation maladie supplémentaire
+            }
+
+            let totalSalariales = 0;
+            let totalPatronales = 0;
+            const detailSalariales = [];
+            const detailPatronales = [];
+
+            // Cotisations salariales
+            cotisationsConfig.salariales.forEach(cot => {
+                const base = getPlafondBase(cot.base, brutMensuel, plafondMensuel);
+                const montant = base * (cot.taux / 100);
+                if (montant > 0) {
+                    totalSalariales += montant;
+                    detailSalariales.push({
+                        nom: cot.nom,
+                        taux: cot.taux,
+                        base: base,
+                        montant: montant
+                    });
+                }
+            });
+
+            // Cotisation Alsace-Moselle
+            if (tauxSupplementaire > 0) {
+                const montant = brutMensuel * (tauxSupplementaire / 100);
+                totalSalariales += montant;
+                detailSalariales.push({
+                    nom: 'Cotisation maladie Alsace-Moselle',
+                    taux: tauxSupplementaire,
+                    base: brutMensuel,
+                    montant: montant
+                });
+            }
+
+            // Cotisations patronales
+            cotisationsConfig.patronales.forEach(cot => {
+                const base = getPlafondBase(cot.base, brutMensuel, plafondMensuel);
+                const montant = base * (cot.taux / 100);
+                if (montant > 0) {
+                    totalPatronales += montant;
+                    detailPatronales.push({
+                        nom: cot.nom,
+                        taux: cot.taux,
+                        base: base,
+                        montant: montant
+                    });
+                }
+            });
+
+            return {
+                totalSalariales,
+                totalPatronales,
+                detailSalariales,
+                detailPatronales
+            };
+        }
+
+        function brutToNet(brutMensuel, status, region, taxRate) {
+            const cotisations = calculateCotisations(brutMensuel, status, region);
+            const netAvantImpot = brutMensuel - cotisations.totalSalariales;
+            const impot = netAvantImpot * (taxRate / 100);
+            const netApresImpot = netAvantImpot - impot;
+
+            return {
+                brut: brutMensuel,
+                netAvantImpot,
+                impot,
+                netApresImpot,
+                cotisations
+            };
+        }
+
+        function netToBrut(netSouhaite, status, region, taxRate) {
+            // Approximation itérative
+            let brut = netSouhaite * 1.3; // Estimation initiale
+            let iterations = 0;
+            const maxIterations = 50;
+            const tolerance = 0.01;
+
+            while (iterations < maxIterations) {
+                const result = brutToNet(brut, status, region, taxRate);
+                const diff = netSouhaite - result.netApresImpot;
+                
+                if (Math.abs(diff) < tolerance) break;
+                
+                brut += diff * 0.8; // Facteur de convergence
+                iterations++;
+            }
+
+            return brutToNet(brut, status, region, taxRate);
+        }
+
+        function calculate() {
+            const salaryInput = parseFloat(document.getElementById('salary-input').value) || 0;
+            const period = document.getElementById('period').value;
+            const status = document.getElementById('status').value;
+            const region = document.getElementById('region').value;
+            const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+            const hoursWeek = parseFloat(document.getElementById('hours-week').value) || 35;
+            const mutuelle = document.getElementById('mutuelle').checked;
+            const transport = document.getElementById('transport').checked;
+            const ticketsResto = document.getElementById('tickets-resto').checked;
+            const heuresSup = document.getElementById('heures-sup').checked;
+            const heuresSupValue = parseFloat(document.getElementById('heures-sup-value').value) || 0;
+
+            // Afficher/masquer le champ heures sup
+            document.getElementById('heures-sup-amount').style.display = heuresSup ? 'block' : 'none';
+
+            if (salaryInput <= 0) {
+                updateDisplay({
+                    brut: 0,
+                    netAvantImpot: 0,
+                    impot: 0,
+                    netApresImpot: 0,
+                    cotisations: { totalSalariales: 0, totalPatronales: 0, detailSalariales: [], detailPatronales: [] }
+                }, period, hoursWeek, taxRate, 0, 0, 0);
+                return;
+            }
+
+            // Conversion en mensuel
+            let salaireMensuel = salaryInput;
+            switch(period) {
+                case 'yearly':
+                    salaireMensuel = salaryInput / 12;
+                    break;
+                case 'daily':
+                    salaireMensuel = salaryInput * (JOURS_TRAVAILLES_AN / 12);
+                    break;
+                case 'hourly':
+                    salaireMensuel = salaryInput * hoursWeek * (SEMAINES_AN / 12);
+                    break;
+            }
+
+            // Calcul
+            let result;
+            if (currentMode === 'brut-to-net') {
+                result = brutToNet(salaireMensuel, status, region, taxRate);
+            } else {
+                result = netToBrut(salaireMensuel, status, region, taxRate);
+            }
+
+            // Ajustements avantages
+            let avantages = 0;
+            let deductions = 0;
+
+            if (mutuelle) {
+                deductions += 25; // Part salariale mutuelle
+            }
+            if (transport) {
+                avantages += 43; // Remboursement 50% Navigo
+            }
+            if (ticketsResto) {
+                deductions += 4 * 20; // ~20 jours travaillés, part salariale
+            }
+            if (heuresSup && heuresSupValue > 0) {
+                avantages += heuresSupValue; // Heures sup non imposées
+            }
+
+            updateDisplay(result, period, hoursWeek, taxRate, avantages, deductions, heuresSupValue);
+        }
+
+        function updateDisplay(result, period, hoursWeek, taxRate, avantages, deductions, heuresSupValue) {
+            const formatter = new Intl.NumberFormat('fr-FR', { 
+                style: 'currency', 
+                currency: 'EUR',
+                maximumFractionDigits: 2 
+            });
+
+            // Conversion selon période
+            let multiplier = 1;
+            let periodLabel = 'par mois';
+            
+            switch(period) {
+                case 'yearly':
+                    multiplier = 12;
+                    periodLabel = 'par an';
+                    break;
+                case 'daily':
+                    multiplier = 12 / JOURS_TRAVAILLES_AN;
+                    periodLabel = 'par jour';
+                    break;
+                case 'hourly':
+                    multiplier = 12 / (hoursWeek * SEMAINES_AN);
+                    periodLabel = 'par heure';
+                    break;
+            }
+
+            const netFinal = result.netApresImpot + avantages - deductions;
+
+            // Résultat principal
+            const mainLabel = currentMode === 'brut-to-net' ? 'Salaire Net' : 'Salaire Brut nécessaire';
+            const mainValue = currentMode === 'brut-to-net' ? netFinal * multiplier : result.brut * multiplier;
+            
+            document.getElementById('result-main-label').textContent = mainLabel;
+            document.getElementById('result-main-value').textContent = formatter.format(mainValue);
+            document.getElementById('result-main-period').textContent = periodLabel;
+
+            // Résultats détaillés (toujours en mensuel)
+            document.getElementById('result-brut').textContent = formatter.format(result.brut);
+            document.getElementById('result-brut-yearly').textContent = formatter.format(result.brut * 12) + ' / an';
+            
+            document.getElementById('result-net-avant').textContent = formatter.format(result.netAvantImpot);
+            document.getElementById('result-net-avant-yearly').textContent = formatter.format(result.netAvantImpot * 12) + ' / an';
+            
+            document.getElementById('result-impot').textContent = formatter.format(result.impot);
+            document.getElementById('result-taux-impot').textContent = `Taux: ${taxRate}%`;
+            
+            document.getElementById('result-net-apres').textContent = formatter.format(netFinal);
+            document.getElementById('result-net-apres-yearly').textContent = formatter.format(netFinal * 12) + ' / an';
+
+            // Coût employeur
+            const coutEmployeur = result.brut + result.cotisations.totalPatronales;
+            document.getElementById('result-cout-employeur').textContent = formatter.format(coutEmployeur);
+            document.getElementById('result-charges-patronales').textContent = `Charges patronales: ${formatter.format(result.cotisations.totalPatronales)}`;
+
+            // Taux et ratios
+            const tauxCharges = result.brut > 0 ? (result.cotisations.totalSalariales / result.brut * 100).toFixed(1) : 0;
+            const ratio = result.brut > 0 ? (netFinal / result.brut * 100).toFixed(1) : 0;
+            
+            document.getElementById('result-taux-charges').textContent = tauxCharges + ' %';
+            document.getElementById('result-ratio').textContent = ratio + ' %';
+
+            // Tableau des cotisations
+            const cotisationsBody = document.getElementById('cotisations-body');
+            cotisationsBody.innerHTML = '';
+            
+            result.cotisations.detailSalariales.forEach(cot => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cot.nom}</td>
+                    <td><span class="rate-badge">${cot.taux.toFixed(2)}%</span></td>
+                    <td>${formatter.format(cot.montant)}</td>
+                `;
+                cotisationsBody.appendChild(tr);
+            });
+
+            // Ligne total
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td><strong>Total cotisations salariales</strong></td>
+                <td></td>
+                <td><strong>${formatter.format(result.cotisations.totalSalariales)}</strong></td>
+            `;
+            cotisationsBody.appendChild(totalRow);
+
+            // Comparaisons toutes périodes
+            const hourlyBrut = result.brut / (hoursWeek * SEMAINES_AN / 12);
+            const hourlyNet = netFinal / (hoursWeek * SEMAINES_AN / 12);
+            const dailyBrut = result.brut / (JOURS_TRAVAILLES_AN / 12);
+            const dailyNet = netFinal / (JOURS_TRAVAILLES_AN / 12);
+
+            document.getElementById('comp-hourly-brut').textContent = formatter.format(hourlyBrut) + ' brut';
+            document.getElementById('comp-hourly-net').textContent = formatter.format(hourlyNet) + ' net';
+            document.getElementById('comp-daily-brut').textContent = formatter.format(dailyBrut) + ' brut';
+            document.getElementById('comp-daily-net').textContent = formatter.format(dailyNet) + ' net';
+            document.getElementById('comp-monthly-brut').textContent = formatter.format(result.brut) + ' brut';
+            document.getElementById('comp-monthly-net').textContent = formatter.format(netFinal) + ' net';
+            document.getElementById('comp-yearly-brut').textContent = formatter.format(result.brut * 12) + ' brut';
+            document.getElementById('comp-yearly-net').textContent = formatter.format(netFinal * 12) + ' net';
+        }
+
+        function toggleBreakdown(id) {
+            const content = document.getElementById('breakdown-' + id);
+            const toggle = document.getElementById('toggle-' + id);
+            content.classList.toggle('show');
+            toggle.classList.toggle('open');
+        }
+
+        function saveCalculation() {
+            const salaryInput = parseFloat(document.getElementById('salary-input').value) || 0;
+            if (salaryInput <= 0) {
+                showToast('Veuillez entrer un salaire valide', 'error');
+                return;
+            }
+
+            const period = document.getElementById('period').value;
+            const status = document.getElementById('status').value;
+            const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+
+            const result = currentMode === 'brut-to-net' 
+                ? brutToNet(salaryInput, status, document.getElementById('region').value, taxRate)
+                : netToBrut(salaryInput, status, document.getElementById('region').value, taxRate);
+
+            const calculation = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('fr-FR'),
+                mode: currentMode,
+                input: salaryInput,
+                period: period,
+                status: status,
+                brut: result.brut,
+                net: result.netApresImpot
+            };
+
+            history.unshift(calculation);
+            if (history.length > 10) history.pop(); // Garder les 10 derniers
+            
+            localStorage.setItem('salary-history', JSON.stringify(history));
+            renderHistory();
+            showToast('Calcul sauvegardé !', 'success');
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-history">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p>Aucun calcul sauvegardé</p>
+                        <small>Cliquez sur "Sauvegarder" pour garder un historique</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const formatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+            const statusLabels = {
+                'non-cadre': 'Non-cadre',
+                'cadre': 'Cadre',
+                'fonction-publique': 'Fonction publique',
+                'profession-liberale': 'Prof. libérale',
+                'apprenti': 'Apprenti',
+                'stagiaire': 'Stagiaire'
+            };
+            const periodLabels = {
+                'monthly': '/mois',
+                'yearly': '/an',
+                'daily': '/jour',
+                'hourly': '/heure'
+            };
+
+            container.innerHTML = history.map(calc => `
+                <div class="history-item" onclick="loadCalculation(${calc.id})">
+                    <div class="history-info">
+                        <div class="history-icon">${calc.mode === 'brut-to-net' ? '📊' : '🔄'}</div>
+                        <div class="history-details">
+                            <h5>${statusLabels[calc.status]} ${periodLabels[calc.period]}</h5>
+                            <span>${calc.date}</span>
+                        </div>
+                    </div>
+                    <div class="history-values">
+                        <div class="history-brut">${formatter.format(calc.brut)} brut</div>
+                        <div class="history-net">${formatter.format(calc.net)} net</div>
+                    </div>
+                    <button class="history-delete" onclick="event.stopPropagation(); deleteCalculation(${calc.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function loadCalculation(id) {
+            const calc = history.find(c => c.id === id);
+            if (!calc) return;
+
+            setMode(calc.mode);
+            document.getElementById('salary-input').value = calc.input;
+            document.getElementById('period').value = calc.period;
+            document.getElementById('status').value = calc.status;
+            
+            calculate();
+            showToast('Calcul chargé !', 'success');
+        }
+
+        function deleteCalculation(id) {
+            history = history.filter(c => c.id !== id);
+            localStorage.setItem('salary-history', JSON.stringify(history));
+            renderHistory();
+            showToast('Calcul supprimé', 'success');
+        }
+
+        function exportPDF() {
+            window.print();
+            showToast('Impression en cours...', 'success');
+        }
+
+        function copyResult() {
+            const brut = document.getElementById('result-brut').textContent;
+            const net = document.getElementById('result-net-apres').textContent;
+            const status = document.getElementById('status').value;
+            
+            const text = `Simulation salaire (${status})\nBrut mensuel: ${brut}\nNet après impôt: ${net}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copié dans le presse-papier !', 'success');
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('salary-input').value = '';
+            document.getElementById('period').value = 'monthly';
+            document.getElementById('status').value = 'non-cadre';
+            document.getElementById('region').value = 'metropole';
+            document.getElementById('tax-rate').value = '0';
+            document.getElementById('hours-week').value = '35';
+            document.getElementById('mutuelle').checked = true;
+            document.getElementById('transport').checked = false;
+            document.getElementById('tickets-resto').checked = false;
+            document.getElementById('heures-sup').checked = false;
+            document.getElementById('heures-sup-value').value = '0';
+            
+            setMode('brut-to-net');
+            calculate();
+            showToast('Formulaire réinitialisé', 'success');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

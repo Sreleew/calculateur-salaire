@@ -1,0 +1,10 @@
+# Robots.txt pour Calculateur Salaire Brut Net France 2026
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://calculateur-salaire-brut-net.fr/sitemap.xml
+
+# Crawl-delay pour éviter la surcharge
+Crawl-delay: 1
