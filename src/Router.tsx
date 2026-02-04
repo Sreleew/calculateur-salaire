@@ -32,6 +32,9 @@ const ComparateurCoutVie = lazy(() => import('./pages/ComparateurCoutVie'));
 const CalculateurAlsaceMoselle = lazy(() => import('./pages/CalculateurAlsaceMoselle'));
 const CalculateurDOMTOM = lazy(() => import('./pages/CalculateurDOMTOM'));
 const CalculateurCorse = lazy(() => import('./pages/CalculateurCorse'));
+const MentionsLegales = lazy(() => import('./pages/MentionsLegales'));
+const PolitiqueConfidentialite = lazy(() => import('./pages/PolitiqueConfidentialite'));
+const ConditionsUtilisation = lazy(() => import('./pages/ConditionsUtilisation'));
 
 const VILLE_SLUGS = [
   'paris', 'lyon', 'marseille', 'toulouse', 'bordeaux',
@@ -66,6 +69,9 @@ const routes: Record<string, () => JSX.Element> = {
   '/calculateur-alsace-moselle': CalculateurAlsaceMoselle,
   '/calculateur-domtom': CalculateurDOMTOM,
   '/calculateur-corse': CalculateurCorse,
+  '/mentions-legales': MentionsLegales,
+  '/politique-confidentialite': PolitiqueConfidentialite,
+  '/conditions-utilisation': ConditionsUtilisation,
 };
 
 VILLE_SLUGS.forEach(slug => {
@@ -444,6 +450,38 @@ export default function Router() {
                 <li>
                   <FooterLink href="/salaire-bordeaux" setCurrentPath={setCurrentPath}>
                     Bordeaux
+                  </FooterLink>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style={{
+            paddingTop: '2rem',
+            borderTop: '1px solid var(--border-color)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '2rem',
+            marginBottom: '2rem'
+          }}>
+            <div>
+              <h3 style={{ marginBottom: '1rem', fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Informations Légales
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, lineHeight: 2 }}>
+                <li>
+                  <FooterLink href="/mentions-legales" setCurrentPath={setCurrentPath}>
+                    Mentions Légales
+                  </FooterLink>
+                </li>
+                <li>
+                  <FooterLink href="/politique-confidentialite" setCurrentPath={setCurrentPath}>
+                    Politique de Confidentialité
+                  </FooterLink>
+                </li>
+                <li>
+                  <FooterLink href="/conditions-utilisation" setCurrentPath={setCurrentPath}>
+                    Conditions d'Utilisation
                   </FooterLink>
                 </li>
               </ul>
