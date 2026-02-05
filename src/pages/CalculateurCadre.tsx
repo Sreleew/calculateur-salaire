@@ -4,6 +4,7 @@ import AdSenseBlock from '../components/AdSenseBlock';
 
 export default function CalculateurCadre() {
   const [salaire, setSalaire] = useState('3500');
+  const [periode, setPeriode] = useState<'mensuel' | 'horaire'>('mensuel');
   const [brut, setBrut] = useState(0);
   const [net, setNet] = useState(0);
   const [netApresImpot, setNetApresImpot] = useState(0);
@@ -14,6 +15,17 @@ export default function CalculateurCadre() {
     maximumFractionDigits: 0
   });
 
+  const convertSalaire = (value: number, from: 'mensuel' | 'horaire', to: 'mensuel' | 'horaire') => {
+    if (from === to) return value;
+    if (from === 'mensuel' && to === 'horaire') {
+      return value / 151.67;
+    }
+    if (from === 'horaire' && to === 'mensuel') {
+      return value * 151.67;
+    }
+    return value;
+  };
+
   useEffect(() => {
     const val = parseFloat(salaire) || 0;
     const netVal = val * 0.75;
@@ -22,6 +34,15 @@ export default function CalculateurCadre() {
     setNet(netVal);
     setNetApresImpot(netApresImpotVal);
   }, [salaire]);
+
+  const handlePeriodeChange = (newPeriode: 'mensuel' | 'horaire') => {
+    if (newPeriode !== periode) {
+      const currentValue = parseFloat(salaire) || 0;
+      const convertedValue = convertSalaire(currentValue, periode, newPeriode);
+      setSalaire(convertedValue.toFixed(2));
+      setPeriode(newPeriode);
+    }
+  };
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
@@ -52,14 +73,47 @@ export default function CalculateurCadre() {
         border: '1px solid var(--border-color)'
       }}>
         <div style={{ marginBottom: '2rem' }}>
-          <label style={{
-            display: 'block',
-            fontWeight: 600,
-            marginBottom: '0.5rem',
-            fontSize: '1.1rem'
-          }}>
-            Salaire brut mensuel (€)
-          </label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <label style={{
+              display: 'block',
+              fontWeight: 600,
+              fontSize: '1.1rem'
+            }}>
+              Salaire brut {periode === 'mensuel' ? 'mensuel' : 'horaire'} (€)
+            </label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => handlePeriodeChange('mensuel')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  border: periode === 'mensuel' ? '2px solid #3b82f6' : '2px solid var(--border-color)',
+                  background: periode === 'mensuel' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                  color: periode === 'mensuel' ? '#3b82f6' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Mensuel
+              </button>
+              <button
+                onClick={() => handlePeriodeChange('horaire')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  border: periode === 'horaire' ? '2px solid #3b82f6' : '2px solid var(--border-color)',
+                  background: periode === 'horaire' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                  color: periode === 'horaire' ? '#3b82f6' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Horaire
+              </button>
+            </div>
+          </div>
           <input
             type="number"
             value={salaire}
@@ -90,7 +144,7 @@ export default function CalculateurCadre() {
             border: '1px solid rgba(59, 130, 246, 0.2)'
           }}>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              Brut Mensuel
+              Brut {periode === 'mensuel' ? 'Mensuel' : 'Horaire'}
             </div>
             <div style={{ fontSize: '2rem', fontWeight: 700, color: '#3b82f6' }}>
               {formatter.format(brut)}
@@ -104,7 +158,7 @@ export default function CalculateurCadre() {
             border: '1px solid rgba(16, 185, 129, 0.2)'
           }}>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              Net Avant Impôt
+              Net Avant Impôt {periode === 'mensuel' ? 'Mensuel' : 'Horaire'}
             </div>
             <div style={{ fontSize: '2rem', fontWeight: 700, color: '#10b981' }}>
               {formatter.format(net)}
@@ -118,7 +172,7 @@ export default function CalculateurCadre() {
             border: '1px solid rgba(245, 158, 11, 0.2)'
           }}>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              Net Après Impôt
+              Net Après Impôt {periode === 'mensuel' ? 'Mensuel' : 'Horaire'}
             </div>
             <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f59e0b' }}>
               {formatter.format(netApresImpot)}
